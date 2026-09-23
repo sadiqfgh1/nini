@@ -160,7 +160,7 @@
             box-shadow: 0 18px 45px rgba(255,77,141,.32);
         }
 
-        /* المحتوى الرئيسي و توزيع الأعمدة */
+        /* المحتوى الرئيسي */
         #main-content {
             opacity: 0;
             visibility: hidden;
@@ -195,12 +195,11 @@
 
         .content-grid {
             display: grid;
-            grid-template-columns: 350px 1fr 350px;
+            grid-template-columns: 360px 1fr 360px;
             gap: 24px;
             align-items: start;
         }
 
-        /* بطاقات النظام الزجاجية */
         .glass-panel {
             background:
                 linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.015)),
@@ -215,7 +214,7 @@
         }
 
         .panel-title {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 800;
             color: #fff;
             margin-bottom: 16px;
@@ -226,70 +225,86 @@
             padding-bottom: 12px;
         }
 
-        /* صندوق الزيارة */
-        .ziyara-box {
-            max-height: 720px;
+        /* صندوق رفع الصور */
+        .upload-wrapper {
             display: flex;
             flex-direction: column;
-        }
-
-        .ziyara-content {
-            overflow-y: auto;
-            padding-left: 8px;
-            line-height: 2.2;
-            color: #e2e8f0;
-            font-size: 15px;
-            text-align: justify;
-        }
-
-        .ziyara-content::-webkit-scrollbar,
-        .gallery-container::-webkit-scrollbar {
-            width: 5px;
-        }
-        .ziyara-content::-webkit-scrollbar-thumb,
-        .gallery-container::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,.2);
-            border-radius: 10px;
-        }
-
-        .font-controls button {
-            background: rgba(255,255,255,.08);
-            border: 1px solid var(--line);
-            color: #fff;
-            border-radius: 8px;
-            padding: 2px 10px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        /* صندوق رفع الصور */
-        .upload-section {
-            border: 2px dashed rgba(255,255,255,.15);
-            border-radius: 16px;
-            padding: 20px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: .3s ease;
-            background: rgba(255,255,255,.02);
+            gap: 10px;
             margin-bottom: 18px;
         }
 
-        .upload-section:hover {
-            border-color: var(--accent);
-            background: rgba(255,77,141,.04);
+        .file-select-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(255,255,255,.04);
+            border: 1px dashed rgba(255,255,255,.2);
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 13.5px;
+            color: var(--muted);
+            transition: .3s ease;
         }
 
-        .upload-section input { display: none; }
-        .upload-icon { font-size: 28px; margin-bottom: 6px; }
-        .upload-text { font-size: 13px; color: var(--muted); }
+        .file-select-label:hover {
+            border-color: var(--accent);
+            color: #fff;
+            background: rgba(255,77,141,.06);
+        }
+
+        .file-select-label input { display: none; }
+
+        .selected-file-info {
+            font-size: 12px;
+            color: #ffb4ce;
+            text-align: center;
+            min-height: 18px;
+            word-break: break-all;
+        }
+
+        .upload-action-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            border: none;
+            padding: 11px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: .3s ease;
+            box-shadow: 0 4px 15px rgba(255,77,141,.2);
+        }
+
+        .upload-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,77,141,.35);
+        }
+
+        .upload-action-btn:disabled {
+            background: rgba(255,255,255,.1);
+            color: rgba(255,255,255,.3);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
         .gallery-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            max-height: 520px;
+            max-height: 480px;
             overflow-y: auto;
             padding-left: 4px;
+        }
+
+        .empty-gallery {
+            grid-column: span 2;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            padding: 20px 0;
         }
 
         .gallery-item {
@@ -333,14 +348,43 @@
 
         .gallery-item:hover .delete-btn { opacity: 1; }
 
-        .save-notice {
-            font-size: 11px;
-            color: #8b5cf6;
-            margin-top: 8px;
-            text-align: center;
+        /* صندوق الزيارة */
+        .ziyara-box {
+            max-height: 720px;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* القسم الأوسط (العداد والرسالة) */
+        .ziyara-content {
+            overflow-y: auto;
+            padding-left: 8px;
+            line-height: 2.2;
+            color: #e2e8f0;
+            font-size: 15px;
+            text-align: justify;
+        }
+
+        .ziyara-content::-webkit-scrollbar,
+        .gallery-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        .ziyara-content::-webkit-scrollbar-thumb,
+        .gallery-container::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,.2);
+            border-radius: 10px;
+        }
+
+        .font-controls button {
+            background: rgba(255,255,255,.08);
+            border: 1px solid var(--line);
+            color: #fff;
+            border-radius: 8px;
+            padding: 2px 10px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* المنتصف */
         .timer-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -404,7 +448,6 @@
             margin-bottom: 14px;
         }
 
-        /* التجاوب مع مختلف الشاشات */
         @media (max-width: 1150px) {
             .content-grid {
                 grid-template-columns: 1fr;
@@ -437,21 +480,24 @@
 
         <div class="content-grid">
             
-            <!-- الجانب الأيمن: معرض ورفع الصور -->
+            <!-- الجانب الأيمن: معرض وزر رفع الصور -->
             <div class="glass-panel">
                 <div class="panel-title">
                     <span>صورنا وذكرياتنا 📸</span>
                     <span style="font-size: 12px; color: var(--accent);">مجلد img/</span>
                 </div>
 
-                <label class="upload-section" for="image-upload">
-                    <div class="upload-icon">📂</div>
-                    <div class="upload-text">اضغطي هنا لإضافة صورة جديدة</div>
-                    <input type="file" id="image-upload" accept="image/*" multiple>
-                </label>
+                <div class="upload-wrapper">
+                    <label class="file-select-label" for="image-input">
+                        <span>📁 اختر صورة من جهازك</span>
+                        <input type="file" id="image-input" accept="image/*">
+                    </label>
+
+                    <div class="selected-file-info" id="file-name">لم يتم اختيار صورة بعد</div>
+                    <button class="upload-action-btn" id="upload-btn" disabled>رفع الصورة ⬆️</button>
+                </div>
 
                 <div class="gallery-container" id="gallery"></div>
-                <div class="save-notice">تُحفظ الصور داخل مجلد ذكرياتنا بالموقع تلقائياً ✨</div>
             </div>
 
             <!-- المنتصف: العداد والرسالة -->
@@ -488,7 +534,7 @@
                 </div>
             </div>
 
-            <!-- الجانب الأيسر: زيارة عاشوراء كاملة -->
+            <!-- الجانب الأيسر: زيارة عاشوراء -->
             <div class="glass-panel ziyara-box">
                 <div class="panel-title">
                     <span>زيارة عاشوراء 🕊️</span>
@@ -523,7 +569,6 @@
         const mainContent = document.getElementById('main-content');
         const startDate = new Date('2025-06-29T00:00:00');
 
-        // فتح الشاشة مع التأثيرات
         enterBtn.addEventListener('click', function() {
             var duration = 3.5 * 1000;
             var animationEnd = Date.now() + duration;
@@ -549,7 +594,6 @@
             }, 300);
         });
 
-        // عداد الوقت
         function updateTimer() {
             const now = new Date();
             let years = now.getFullYear() - startDate.getFullYear();
@@ -577,7 +621,6 @@
         setInterval(updateTimer, 1000);
         updateTimer();
 
-        // تكبير وتصغير خط الزيارة
         let currentFontSize = 15;
         function changeFontSize(step) {
             currentFontSize += step;
@@ -586,51 +629,81 @@
             document.getElementById('ziyara-text').style.fontSize = currentFontSize + 'px';
         }
 
-        // إدارة ورفع الصور محلياً
-        const imageUpload = document.getElementById('image-upload');
+        /* منطق اختيار ورفع وعرض الصور */
+        const imageInput = document.getElementById('image-input');
+        const fileNameDisplay = document.getElementById('file-name');
+        const uploadBtn = document.getElementById('upload-btn');
         const gallery = document.getElementById('gallery');
+        let selectedFileBase64 = null;
 
-        function loadSavedImages() {
-            const savedImages = JSON.parse(localStorage.getItem('my_img_folder') || '[]');
+        // عرض الصور المحفوظة فور فتح الصفحة
+        function renderGallery() {
+            const savedImages = JSON.parse(localStorage.getItem('saved_site_images') || '[]');
             gallery.innerHTML = '';
+
+            if (savedImages.length === 0) {
+                gallery.innerHTML = '<div class="empty-gallery">لا توجد صور محفوظة حتى الآن ✨</div>';
+                return;
+            }
+
             savedImages.forEach((imgData, index) => {
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
                 item.innerHTML = `
                     <img src="${imgData}" alt="صورة ${index + 1}">
-                    <button class="delete-btn" onclick="deleteImage(${index})" title="حذف">✕</button>
+                    <button class="delete-btn" onclick="removeImage(${index})" title="حذف الصورة">✕</button>
                 `;
                 gallery.appendChild(item);
             });
         }
 
-        imageUpload.addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            const savedImages = JSON.parse(localStorage.getItem('my_img_folder') || '[]');
-
-            files.forEach(file => {
+        // عند اختيار ملف
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileNameDisplay.innerText = file.name;
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    savedImages.push(event.target.result);
-                    try {
-                        localStorage.setItem('my_img_folder', JSON.stringify(savedImages));
-                        loadSavedImages();
-                    } catch (error) {
-                        alert('وصلت سعة تخزين الصور الحد الأقصى المتاح في المتصفح.');
-                    }
+                    selectedFileBase64 = event.target.result;
+                    uploadBtn.disabled = false;
                 };
                 reader.readAsDataURL(file);
-            });
+            } else {
+                fileNameDisplay.innerText = 'لم يتم اختيار صورة بعد';
+                uploadBtn.disabled = true;
+                selectedFileBase64 = null;
+            }
         });
 
-        function deleteImage(index) {
-            let savedImages = JSON.parse(localStorage.getItem('my_img_folder') || '[]');
+        // عند الضغط على زر "رفع الصورة"
+        uploadBtn.addEventListener('click', function() {
+            if (!selectedFileBase64) return;
+
+            const savedImages = JSON.parse(localStorage.getItem('saved_site_images') || '[]');
+            savedImages.push(selectedFileBase64);
+
+            try {
+                localStorage.setItem('saved_site_images', JSON.stringify(savedImages));
+                renderGallery();
+
+                // إعادة تعيين الخانات
+                imageInput.value = '';
+                selectedFileBase64 = null;
+                fileNameDisplay.innerText = 'تم رفع الصورة وحفظها بنجاح! ✨';
+                uploadBtn.disabled = true;
+            } catch (err) {
+                alert('عذراً، مساحة تخزين المتصفح ممتلئة.');
+            }
+        });
+
+        function removeImage(index) {
+            let savedImages = JSON.parse(localStorage.getItem('saved_site_images') || '[]');
             savedImages.splice(index, 1);
-            localStorage.setItem('my_img_folder', JSON.stringify(savedImages));
-            loadSavedImages();
+            localStorage.setItem('saved_site_images', JSON.stringify(savedImages));
+            renderGallery();
         }
 
-        loadSavedImages();
+        renderGallery();
     </script>
 </body>
 </html>
