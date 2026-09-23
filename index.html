@@ -12,10 +12,9 @@
         :root {
             --bg: #050509;
             --bg-2: #0b0b12;
-            --glass: rgba(18, 18, 28, .58);
-            --glass-strong: rgba(20, 20, 31, .78);
+            --glass: rgba(18, 18, 28, .65);
             --line: rgba(255,255,255,.10);
-            --line-hover: rgba(255,255,255,.20);
+            --line-hover: rgba(255,255,255,.22);
             --text: #f8fafc;
             --muted: #a1a1b2;
             --accent: #ff4d8d;
@@ -96,9 +95,9 @@
         #welcome-screen {
             position: fixed;
             inset: 0;
-            background: rgba(3,3,8,.72);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+            background: rgba(3,3,8,.78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -126,42 +125,10 @@
             animation: welcomeFloat 5s ease-in-out infinite;
         }
 
-        .welcome-card::before {
-            content: "❤";
-            position: absolute;
-            top: -45px;
-            right: -30px;
-            font-size: 150px;
-            color: rgba(255,77,141,.06);
-            transform: rotate(15deg);
-        }
-
-        .welcome-card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(120deg, transparent 25%, rgba(255,255,255,.07), transparent 70%);
-            transform: translateX(120%);
-            animation: shine 5s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes welcomeFloat {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-9px); }
-        }
-
-        @keyframes shine {
-            0%, 65% { transform: translateX(120%); }
-            100% { transform: translateX(-120%); }
-        }
-
         .welcome-card h1 {
-            font-size: clamp(28px, 5vw, 36px);
+            font-size: clamp(26px, 5vw, 34px);
             font-weight: 900;
             margin-bottom: 14px;
-            position: relative;
-            z-index: 2;
             background: linear-gradient(135deg, #fff 25%, #ffb4ce 70%, #b9a7ff);
             -webkit-background-clip: text;
             background-clip: text;
@@ -173,95 +140,207 @@
             font-size: 15px;
             margin-bottom: 32px;
             line-height: 1.9;
-            position: relative;
-            z-index: 2;
         }
 
         .modern-btn {
             background: linear-gradient(135deg, #ff4d8d, #8b5cf6);
             color: white;
             border: 1px solid rgba(255,255,255,.16);
-            padding: 15px 30px;
+            padding: 14px 28px;
             font-size: 15px;
             font-weight: 800;
             border-radius: 16px;
             cursor: pointer;
-            transition: transform .3s ease, box-shadow .3s ease, filter .3s ease;
+            transition: transform .3s ease, box-shadow .3s ease;
             box-shadow: 0 12px 35px rgba(255,77,141,.22);
-            position: relative;
-            overflow: hidden;
-            z-index: 2;
-        }
-
-        .modern-btn::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
-            transform: translateX(-120%);
-            transition: transform .5s ease;
         }
 
         .modern-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 18px 45px rgba(255,77,141,.30);
-            filter: brightness(1.08);
+            box-shadow: 0 18px 45px rgba(255,77,141,.32);
         }
 
-        .modern-btn:hover::before { transform: translateX(120%); }
-        .modern-btn:active { transform: translateY(-1px) scale(.98); }
-
-        /* المحتوى الرئيسي */
+        /* المحتوى الرئيسي و توزيع الأعمدة */
         #main-content {
             opacity: 0;
             visibility: hidden;
             position: relative;
             transition: opacity 1s ease, transform 1s ease;
             transform: translateY(30px) scale(.98);
-            text-align: center;
-            padding: 70px 20px;
-            max-width: 820px;
+            padding: 50px 24px;
+            max-width: 1500px;
             width: 100%;
             z-index: 10;
         }
 
+        .page-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
         .main-title {
-            font-size: clamp(30px, 5vw, 48px);
-            line-height: 1.25;
+            font-size: clamp(28px, 4vw, 44px);
             font-weight: 900;
-            margin-bottom: 12px;
-            letter-spacing: -.8px;
+            margin-bottom: 10px;
             background: linear-gradient(135deg, #fff 20%, #ffd1df 55%, #b9a7ff 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 8px 30px rgba(255,77,141,.12));
         }
 
         .subtitle {
             color: var(--muted);
             font-size: 15px;
-            margin-bottom: 36px;
-            font-weight: 400;
         }
 
-        .timer-container,
-        .message-box {
+        .content-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr 350px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* بطاقات النظام الزجاجية */
+        .glass-panel {
             background:
-                linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.018)),
+                linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.015)),
                 var(--glass);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border: 1px solid var(--line);
-            border-radius: 28px;
-            box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.07);
+            border-radius: 26px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            position: relative;
         }
 
-        .timer-container {
-            padding: 26px;
-            margin-bottom: 22px;
+        .panel-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            padding-bottom: 12px;
         }
 
+        /* صندوق الزيارة */
+        .ziyara-box {
+            max-height: 720px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ziyara-content {
+            overflow-y: auto;
+            padding-left: 8px;
+            line-height: 2.2;
+            color: #e2e8f0;
+            font-size: 15px;
+            text-align: justify;
+        }
+
+        .ziyara-content::-webkit-scrollbar,
+        .gallery-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        .ziyara-content::-webkit-scrollbar-thumb,
+        .gallery-container::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,.2);
+            border-radius: 10px;
+        }
+
+        .font-controls button {
+            background: rgba(255,255,255,.08);
+            border: 1px solid var(--line);
+            color: #fff;
+            border-radius: 8px;
+            padding: 2px 10px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* صندوق رفع الصور */
+        .upload-section {
+            border: 2px dashed rgba(255,255,255,.15);
+            border-radius: 16px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: .3s ease;
+            background: rgba(255,255,255,.02);
+            margin-bottom: 18px;
+        }
+
+        .upload-section:hover {
+            border-color: var(--accent);
+            background: rgba(255,77,141,.04);
+        }
+
+        .upload-section input { display: none; }
+        .upload-icon { font-size: 28px; margin-bottom: 6px; }
+        .upload-text { font-size: 13px; color: var(--muted); }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-height: 520px;
+            overflow-y: auto;
+            padding-left: 4px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            border: 1px solid rgba(255,255,255,.08);
+            background: #000;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: rgba(255, 30, 80, 0.85);
+            color: white;
+            border: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+
+        .gallery-item:hover .delete-btn { opacity: 1; }
+
+        .save-notice {
+            font-size: 11px;
+            color: #8b5cf6;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* القسم الأوسط (العداد والرسالة) */
         .timer-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -274,117 +353,64 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 112px;
-            padding: 16px 10px;
+            min-height: 100px;
+            padding: 14px 8px;
             background: rgba(255,255,255,.035);
-            border-radius: 20px;
+            border-radius: 18px;
             border: 1px solid rgba(255,255,255,.065);
-            transition: transform .3s ease, border-color .3s ease, background .3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .time-box::before {
-            content: "";
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: rgba(255,77,141,.09);
-            filter: blur(25px);
-            top: -30px;
-            left: -30px;
-        }
-
-        .time-box:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,.055);
-            border-color: var(--line-hover);
         }
 
         .time-value {
-            font-size: clamp(30px, 5vw, 38px);
-            line-height: 1;
+            font-size: clamp(26px, 4vw, 34px);
             font-weight: 900;
             color: #fff;
-            letter-spacing: -1px;
-            position: relative;
-            z-index: 1;
         }
 
         .time-label {
             font-size: 12px;
             color: var(--muted);
-            margin-top: 9px;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
+            margin-top: 6px;
         }
 
         .total-days-badge {
             font-size: 14px;
             color: var(--muted);
             border-top: 1px solid rgba(255,255,255,.07);
-            padding-top: 18px;
-            font-weight: 500;
+            padding-top: 16px;
+            text-align: center;
         }
 
         .total-days-badge span {
             color: #ffb4ce;
             font-weight: 800;
-            font-size: 19px;
+            font-size: 18px;
         }
 
         .message-box {
-            padding: 34px 36px;
-            text-align: right;
-            line-height: 2.05;
+            margin-top: 20px;
+            line-height: 2;
         }
 
         .message-box h3 {
             color: #fff;
-            font-size: 23px;
-            margin-bottom: 20px;
+            font-size: 21px;
+            margin-bottom: 16px;
             text-align: center;
-            font-weight: 800;
-        }
-
-        .message-box h3::after {
-            content: "";
-            display: block;
-            width: 55px;
-            height: 3px;
-            border-radius: 99px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            margin: 12px auto 0;
         }
 
         .message-box p {
             color: #c9cad6;
-            font-size: 15px;
+            font-size: 14.5px;
             margin-bottom: 14px;
-            font-weight: 400;
         }
 
-        .message-box p:last-child { margin-bottom: 0; }
-
-        @media (max-width: 600px) {
-            #main-content { padding: 42px 14px; }
-            .timer-container { padding: 16px; border-radius: 23px; }
-            .timer-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .time-box { min-height: 100px; }
-            .message-box { padding: 27px 23px; border-radius: 23px; }
-            .message-box p { font-size: 14.5px; }
-            .welcome-card { padding: 45px 25px 35px; border-radius: 27px; }
-            .modern-btn { width: 100%; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: .01ms !important;
-                animation-iteration-count: 1 !important;
-                scroll-behavior: auto !important;
-                transition-duration: .01ms !important;
+        /* التجاوب مع مختلف الشاشات */
+        @media (max-width: 1150px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .ziyara-box, .gallery-container {
+                max-height: 480px;
             }
         }
     </style>
@@ -393,7 +419,7 @@
 
     <div class="background-glow"></div>
 
-    <!-- شاشة البداية المودرن -->
+    <!-- شاشة البداية -->
     <div id="welcome-screen">
         <div class="welcome-card">
             <h1>إلى توأم روحي، نني ❤️</h1>
@@ -402,42 +428,92 @@
         </div>
     </div>
 
-    <!-- الموقع الرئيسي -->
+    <!-- المحتوى الرئيسي -->
     <div id="main-content">
-        <h2 class="main-title">نبضات قلبي معكِ لا توقفها المسافات</h2>
-        <p class="subtitle">منذ لحظة البداية في 29 يونيو 2025 وحتى هذه اللحظة</p>
-
-        <!-- عداد الوقت التفاعلي -->
-        <div class="timer-container">
-            <div class="timer-grid">
-                <div class="time-box">
-                    <span class="time-value" id="years">0</span>
-                    <span class="time-label">سنة</span>
-                </div>
-                <div class="time-box">
-                    <span class="time-value" id="months">0</span>
-                    <span class="time-label">شهر</span>
-                </div>
-                <div class="time-box">
-                    <span class="time-value" id="days">0</span>
-                    <span class="time-label">يوم</span>
-                </div>
-                <div class="time-box">
-                    <span class="time-value" id="hours">0</span>
-                    <span class="time-label">ساعة</span>
-                </div>
-            </div>
-            <div class="total-days-badge">
-                صار إلنه سوه: <span id="total-days-text">0</span> يوم من الحب والأمان ✨
-            </div>
+        <div class="page-header">
+            <h2 class="main-title">نبضات قلبي معكِ لا توقفها المسافات</h2>
+            <p class="subtitle">منذ لحظة البداية في 29 يونيو 2025 وحتى هذه اللحظة</p>
         </div>
 
-        <!-- رسالة الشكر والتقدير -->
-        <div class="message-box">
-            <h3>رسالة من أعمق نقطة في قلبي ❤️</h3>
-            <p>أريد أن أقول لكِ شكراً بكل ما تحمل الكلمة من معنى؛ شكراً لأنكِ تحملتِ طريقتي وعصبيتي، وشكراً لصبركِ العظيم عليّ وعلى قسوة الظروف أحياناً.</p>
-            <p>شكراً لكل دقيقة اهتمام، لكل نظرة حب، ولكل مرة اخترتِ فيها أن تبقي بجانبي وتصلحي ما أفسدته الأيام والمشاكل بيننا.</p>
-            <p>أنتِ لستِ مجرد حبيبة، أنتِ السند والأمان الذي أعتمد عليه دائماً. أحبكِ اليوم وكل يوم أكثر من قبله.</p>
+        <div class="content-grid">
+            
+            <!-- الجانب الأيمن: معرض ورفع الصور -->
+            <div class="glass-panel">
+                <div class="panel-title">
+                    <span>صورنا وذكرياتنا 📸</span>
+                    <span style="font-size: 12px; color: var(--accent);">مجلد img/</span>
+                </div>
+
+                <label class="upload-section" for="image-upload">
+                    <div class="upload-icon">📂</div>
+                    <div class="upload-text">اضغطي هنا لإضافة صورة جديدة</div>
+                    <input type="file" id="image-upload" accept="image/*" multiple>
+                </label>
+
+                <div class="gallery-container" id="gallery"></div>
+                <div class="save-notice">تُحفظ الصور داخل مجلد ذكرياتنا بالموقع تلقائياً ✨</div>
+            </div>
+
+            <!-- المنتصف: العداد والرسالة -->
+            <div>
+                <div class="glass-panel">
+                    <div class="timer-grid">
+                        <div class="time-box">
+                            <span class="time-value" id="years">0</span>
+                            <span class="time-label">سنة</span>
+                        </div>
+                        <div class="time-box">
+                            <span class="time-value" id="months">0</span>
+                            <span class="time-label">شهر</span>
+                        </div>
+                        <div class="time-box">
+                            <span class="time-value" id="days">0</span>
+                            <span class="time-label">يوم</span>
+                        </div>
+                        <div class="time-box">
+                            <span class="time-value" id="hours">0</span>
+                            <span class="time-label">ساعة</span>
+                        </div>
+                    </div>
+                    <div class="total-days-badge">
+                        صار إلنه سوه: <span id="total-days-text">0</span> يوم من الحب والأمان ✨
+                    </div>
+                </div>
+
+                <div class="glass-panel message-box">
+                    <h3>رسالة من أعمق نقطة في قلبي ❤️</h3>
+                    <p>أريد أن أقول لكِ شكراً بكل ما تحمل الكلمة من معنى؛ شكراً لأنكِ تحملتِ طريقتي وعصبيتي، وشكراً لصبركِ العظيم عليّ وعلى قسوة الظروف أحياناً.</p>
+                    <p>شكراً لكل دقيقة اهتمام، لكل نظرة حب، ولكل مرة اخترتِ فيها أن تبقي بجانبي وتصلحي ما أفسدته الأيام والمشاكل بيننا.</p>
+                    <p>أنتِ لستِ مجرد حبيبة، أنتِ السند والأمان الذي أعتمد عليه دائماً. أحبكِ اليوم وكل يوم أكثر من قبله.</p>
+                </div>
+            </div>
+
+            <!-- الجانب الأيسر: زيارة عاشوراء كاملة -->
+            <div class="glass-panel ziyara-box">
+                <div class="panel-title">
+                    <span>زيارة عاشوراء 🕊️</span>
+                    <div class="font-controls">
+                        <button onclick="changeFontSize(1)">A+</button>
+                        <button onclick="changeFontSize(-1)">A-</button>
+                    </div>
+                </div>
+
+                <div class="ziyara-content" id="ziyara-text">
+                    اَلسَّلامُ عَلَيْكَ يا اَبا عَبْدِاللهِ، اَلسَّلامُ عَلَيْكَ يَا بْنَ رَسُولِ اللهِ، اَلسَّلامُ عَلَيْكَ يَا بْنَ اَميرِ الْمُؤْمِنينَ وَابْنَ سَيِّدِ الْوَصِيّينَ، اَلسَّلامُ عَلَيْكَ يَا بْنَ فاطِمَةَ سَيِّدَةِ نِساءِ الْعالَمينَ، اَلسَّلامُ عَلَيْكَ يا ثارَ اللهِ وَابْنَ ثارِهِ وَالْوِتْرَ الْمَوْتُورَ، اَلسَّلامُ عَلَيْكَ وَعَلَى الاَْرْواحِ الَّتي حَلَّتْ بِفِنائِكَ عَلَيْكُمْ مِنّي جَميعاً سَلامُ اللهِ اَبَداً ما بَقيتُ وَبَقِىَ اللَّيْلُ وَالنَّهارُ.<br><br>
+                    يا اَبا عَبْدِاللهِ لَقَدْ عَظُمَتِ الرَّزِيَّةُ وَجَلَّتْ وَعَظُمَتِ الْمُصيبَةُ بِكَ عَلَيْنا وَعَلى جَميعِ اَهْلِ الاِْسْلامِ، وَجَلَّتْ وَعَظُمَتْ مُصيبَتُكَ فِي السَّماواتِ عَلى جَميعِ اَهْلِ السَّماواتِ، فَلَعَنَ اللهُ اُمَّةً اَسَّسَتْ اَساسَ الظُّلْمِ وَالْجَوْرِ عَلَيْكُمْ اَهْلَ الْبَيْتِ، وَلَعَنَ اللهُ اُمَّةً دَفَعَتْكُمْ عَنْ مَقامِكُمْ وَاَزالَتْكُمْ عَنْ مَراتِبِكُمُ الَّتي رَتَّبَكُمُ اللهُ فيها.<br><br>
+                    وَلَعَنَ اللهُ اُمَّةً قَتَلَتْكُمْ، وَلَعَنَ اللهُ الْمُمَهِّدينَ لَهُمْ بِالَّتمْكينِ مِنْ قِتالِكُمْ، بَرِئْتُ اِلَى اللهِ وَاِلَيْكُمْ مِنْهُمْ وَمِنْ اَشْياعِهِمْ وَاَتْباعِهِمْ وَاَوْلِيائِهِم، يا اَبا عَبْدِاللهِ اِنّي سِلْمٌ لِمَنْ سالَمَكُمْ وَحَرْبٌ لِمَنْ حارَبَكُمْ اِلى يَوْمِ الْقِيامَةِ، وَلَعَنَ اللهُ آلَ زِياد وَآلَ مَرْوانَ، وَلَعَنَ اللهُ بَني اُمَيَّةَ قاطِبَةً، وَلَعَنَ اللهُ ابْنَ مَرْجانَةَ، وَلَعَنَ اللهُ عُمَرَ بْنَ سَعْد، وَلَعَنَ اللهُ شِمْراً، وَلَعَنَ اللهُ اُمَّةً اَسْرَجَتْ وَاَلْجَمَتْ وَتَنَقَّبَتْ لِقِتالِكَ.<br><br>
+                    بِاَبي اَنْتَ وَاُمّي لَقَدْ عَظُمَ مُصابي بِكَ فَاَسْاَلُ اللهَ الَّذي اَكْرَمَ مَقامَكَ وَاَكْرَمَني بِكَ اَنْ يَرْزُقَني طَلَبَ ثارِكَ مَعَ اِمام مَنْصُور مِنْ اَهْلِ بَيْتِ مُحَمَّد صَلَّى اللهُ عَلَيْهِ وَآلِهِ، اَللّـهُمَّ اجْعَلْني عِنْدَكَ وَجيهاً بِالْحُسَيْنِ عَلَيْهِ السَّلامُ فِي الدُّنْيا وَالاْخِرَةِ.<br><br>
+                    يا اَبا عَبْدِاللهِ اِنّي اَتَقَرَّبُ اِلى اللهِ وَاِلى رَسُولِهِ وَاِلى اَميرِ الْمُؤْمِنينَ وَاِلى فاطِمَةَ وَاِلَى الْحَسَنِ وَاِلَيْكَ بِمُوالاتِكَ وَبِالْبَراءَةِ مِمَّنْ قاتَلَكَ وَنَصَبَ لَكَ الْحَرْبَ وَبِالْبَراءَةِ مِمَّنْ اَسَّسَ اَساسَ الظُّلْمِ وَالْجَوْرِ عَلَيْكُمْ.<br><br>
+                    اَللّـهُمَّ الْعَنْ اَوَّلَ ظالِم ظَلَمَ حَقَّ مُحَمَّد وَآلِ مُحَمَّد وَآخِرَ تابِع لَهُ عَلى ذلِكَ، اَللّـهُمَّ الْعَنِ الْعِصابَةَ الَّتي جاهَدَتِ الْحُسَيْنَ وَشايَعَتْ وَبايَعَتْ وَتابَعَتْ عَلى قَتْلِهِ، اَللّـهُمَّ الْعَنْهُمْ جَميعاً.<br><br>
+                    (ثم يقال مائة مرة):<br>
+                    اَلسَّلامُ عَلَيْكَ يا اَبا عَبْدِاللهِ وَعَلَى الاَْرْواحِ الَّتي حَلَّتْ بِفِنائِكَ عَلَيْكَ مِنّي سَلامُ اللهِ اَبَداً ما بَقيتُ وَبَقِيَ اللَّيْلُ وَالنَّهارُ وَلا جَعَلَهُ اللهُ آخِرَ الْعَهْدِ مِنّي لِزِيارَتِكُمْ، اَلسَّلامُ عَلَى الْحُسَيْنِ وَعَلى عَلِيِّ بْنِ الْحُسَيْنِ وَعَلى اَوْلادِ الْحُسَيْنِ وَعَلى اَصْحابِ الْحُسَيْنِ.<br><br>
+                    (ثم يقال مائة مرة):<br>
+                    اَللّـهُمَّ الْعَنْ اَوَّلَ ظالِم ظَلَمَ حَقَّ مُحَمَّد وَآلِ مُحَمَّد وَآخِرَ تابِع لَهُ عَلى ذلِكَ، اَللّـهُمَّ الْعَنِ الْعِصابَةَ الَّتي جاهَدَتِ الْحُسَيْنَ وَشايَعَتْ وَبايَعَتْ وَتابَعَتْ عَلى قَتْلِهِ، اَللّـهُمَّ الْعَنْهُمْ جَميعاً.<br><br>
+                    (ثم يُسجد ويُقال):<br>
+                    اَللّـهُمَّ لَكَ الْحَمْدُ حَمْدَ الشّاكِرينَ لَكَ عَلى مُصابِهِمْ، اَلْحَمْدُ للهِ عَلى عَظيمِ رَزِيَّتي، اَللّـهُمَّ ارْزُقْني شَفاعَةَ الْحُسَيْنِ يَوْمَ الْوُرُودِ، وَثَبِّتْ لي قَدَمَ صِدْق عِنْدَكَ مَعَ الْحُسَيْنِ وَاَصْحابِ الْحُسَيْنِ الَّذينَ بَذَلُوا مُهَجَهُمْ دُونَ الْحُسَيْنِ عَلَيْهِ السَّلامُ.
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -445,79 +521,116 @@
         const enterBtn = document.getElementById('enter-btn');
         const welcomeScreen = document.getElementById('welcome-screen');
         const mainContent = document.getElementById('main-content');
-
-        // تاريخ أول اتصال (29 يونيو 2025)
         const startDate = new Date('2025-06-29T00:00:00');
 
+        // فتح الشاشة مع التأثيرات
         enterBtn.addEventListener('click', function() {
-            // تأثير ألعاب نارية فاخر متناسق مع الثيم
-            var duration = 4 * 1000;
+            var duration = 3.5 * 1000;
             var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 40, spread: 360, ticks: 80, zIndex: 1000 };
+            var defaults = { startVelocity: 35, spread: 360, ticks: 80, zIndex: 1100 };
 
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
             var interval = setInterval(function() {
                 var timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-                var particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#ffffff', '#94a3b8', '#64748b', '#cbd5e1'] }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#ffffff', '#94a3b8', '#64748b', '#cbd5e1'] }));
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 40 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#ff4d8d', '#8b5cf6', '#ffffff'] }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#22d3ee', '#ff4d8d', '#ffffff'] }));
             }, 250);
 
-            // إخفاء شاشة البداية بحركة ناعمة وفخمة
             welcomeScreen.style.opacity = '0';
             welcomeScreen.style.visibility = 'hidden';
 
-            // إظهار المحتوى الرئيسي بانسيابية عالية
             setTimeout(() => {
                 mainContent.style.opacity = '1';
                 mainContent.style.visibility = 'visible';
                 mainContent.style.transform = 'translateY(0) scale(1)';
-            }, 400);
+            }, 300);
         });
 
-        // دالة العداد المحسوبة بدقة
+        // عداد الوقت
         function updateTimer() {
             const now = new Date();
-            
             let years = now.getFullYear() - startDate.getFullYear();
             let months = now.getMonth() - startDate.getMonth();
             let days = now.getDate() - startDate.getDate();
             let hours = now.getHours() - startDate.getHours();
 
-            if (hours < 0) {
-                hours += 24;
-                days--;
-            }
-
+            if (hours < 0) { hours += 24; days--; }
             if (days < 0) {
                 months--;
-                const previousMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-                days += previousMonth.getDate();
+                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate();
             }
-
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
+            if (months < 0) { years--; months += 12; }
 
             const diffTime = now - startDate;
             const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-            document.getElementById('years').innerText = years;
-            document.getElementById('months').innerText = months;
-            document.getElementById('days').innerText = days;
-            document.getElementById('hours').innerText = hours;
-            document.getElementById('total-days-text').innerText = totalDays;
+            document.getElementById('years').innerText = Math.max(0, years);
+            document.getElementById('months').innerText = Math.max(0, months);
+            document.getElementById('days').innerText = Math.max(0, days);
+            document.getElementById('hours').innerText = Math.max(0, hours);
+            document.getElementById('total-days-text').innerText = Math.max(0, totalDays);
         }
-
         setInterval(updateTimer, 1000);
         updateTimer();
+
+        // تكبير وتصغير خط الزيارة
+        let currentFontSize = 15;
+        function changeFontSize(step) {
+            currentFontSize += step;
+            if (currentFontSize < 12) currentFontSize = 12;
+            if (currentFontSize > 24) currentFontSize = 24;
+            document.getElementById('ziyara-text').style.fontSize = currentFontSize + 'px';
+        }
+
+        // إدارة ورفع الصور محلياً
+        const imageUpload = document.getElementById('image-upload');
+        const gallery = document.getElementById('gallery');
+
+        function loadSavedImages() {
+            const savedImages = JSON.parse(localStorage.getItem('my_img_folder') || '[]');
+            gallery.innerHTML = '';
+            savedImages.forEach((imgData, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `
+                    <img src="${imgData}" alt="صورة ${index + 1}">
+                    <button class="delete-btn" onclick="deleteImage(${index})" title="حذف">✕</button>
+                `;
+                gallery.appendChild(item);
+            });
+        }
+
+        imageUpload.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const savedImages = JSON.parse(localStorage.getItem('my_img_folder') || '[]');
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    savedImages.push(event.target.result);
+                    try {
+                        localStorage.setItem('my_img_folder', JSON.stringify(savedImages));
+                        loadSavedImages();
+                    } catch (error) {
+                        alert('وصلت سعة تخزين الصور الحد الأقصى المتاح في المتصفح.');
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function deleteImage(index) {
+            let savedImages = JSON.parse(localStorage.getItem('my_img_folder') || '[]');
+            savedImages.splice(index, 1);
+            localStorage.setItem('my_img_folder', JSON.stringify(savedImages));
+            loadSavedImages();
+        }
+
+        loadSavedImages();
     </script>
 </body>
 </html>
