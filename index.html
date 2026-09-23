@@ -6,6 +6,11 @@
     <title>إلى نني ❤️ | عالمنا الخاص</title>
     <!-- مكتبة الألعاب النارية -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- مكتبات Firebase المتوافقة مع المتصفح و GitHub Pages مباشرة -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -121,8 +126,6 @@
             width: 100%;
             position: relative;
             z-index: 2;
-            overflow: hidden;
-            animation: welcomeFloat 5s ease-in-out infinite;
         }
 
         .welcome-card h1 {
@@ -225,7 +228,7 @@
             padding-bottom: 12px;
         }
 
-        /* قسم رفع الصور والمعرض */
+        /* صندوق رفع الصور */
         .upload-wrapper {
             display: flex;
             flex-direction: column;
@@ -324,9 +327,7 @@
             transition: transform .3s ease;
         }
 
-        .gallery-item:hover img {
-            transform: scale(1.08);
-        }
+        .gallery-item:hover img { transform: scale(1.08); }
 
         .delete-btn {
             position: absolute;
@@ -350,7 +351,7 @@
 
         .gallery-item:hover .delete-btn { opacity: 1; }
 
-        /* صندوق الزيارة */
+        /* زيارة عاشوراء */
         .ziyara-box {
             max-height: 720px;
             display: flex;
@@ -451,12 +452,8 @@
         }
 
         @media (max-width: 1150px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-            .ziyara-box, .gallery-container {
-                max-height: 480px;
-            }
+            .content-grid { grid-template-columns: 1fr; }
+            .ziyara-box, .gallery-container { max-height: 480px; }
         }
     </style>
 </head>
@@ -482,11 +479,11 @@
 
         <div class="content-grid">
             
-            <!-- الجانب الأيمن: معرض وزر رفع الصور بتقنية IndexedDB -->
+            <!-- الجانب الأيمن: معرض وسحابة الصور المشفرة Base64 -->
             <div class="glass-panel">
                 <div class="panel-title">
                     <span>صورنا وذكرياتنا 📸</span>
-                    <span style="font-size: 12px; color: var(--accent);">مجلد img/</span>
+                    <span style="font-size: 12px; color: var(--accent);">مزامنة حية ☁️</span>
                 </div>
 
                 <div class="upload-wrapper">
@@ -499,7 +496,9 @@
                     <button class="upload-action-btn" id="upload-btn" disabled>رفع الصورة ⬆️</button>
                 </div>
 
-                <div class="gallery-container" id="gallery"></div>
+                <div class="gallery-container" id="gallery">
+                    <div class="empty-gallery">جاري الاتصال بالسحابة...</div>
+                </div>
             </div>
 
             <!-- المنتصف: العداد والرسالة -->
@@ -566,6 +565,24 @@
     </div>
 
     <script>
+        // إعدادات Firebase الخاصة بمشروعك (مربوطة وجاهزة)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyMfNKsQSkL2_EOmTnNR_Onw69-UVpgk0",
+            authDomain: "nini-32e4c.firebaseapp.com",
+            databaseURL: "https://nini-32e4c-default-rtdb.firebaseio.com",
+            projectId: "nini-32e4c",
+            storageBucket: "nini-32e4c.firebasestorage.app",
+            messagingSenderId: "502817264037",
+            appId: "1:502817264037:web:dc3d436e6c9064eb8b584c",
+            measurementId: "G-L77T5S299J"
+        };
+
+        // تهيئة اتصال Realtime Database
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const imagesRef = database.ref('encoded_memories');
+
+        // الحركات وشاشة البداية
         const enterBtn = document.getElementById('enter-btn');
         const welcomeScreen = document.getElementById('welcome-screen');
         const mainContent = document.getElementById('main-content');
@@ -596,6 +613,7 @@
             }, 300);
         });
 
+        // عداد الوقت
         function updateTimer() {
             const now = new Date();
             let years = now.getFullYear() - startDate.getFullYear();
@@ -623,6 +641,7 @@
         setInterval(updateTimer, 1000);
         updateTimer();
 
+        // تحكم حجم خط الزيارة
         let currentFontSize = 15;
         function changeFontSize(step) {
             currentFontSize += step;
@@ -631,107 +650,31 @@
             document.getElementById('ziyara-text').style.fontSize = currentFontSize + 'px';
         }
 
-        /* ------------------ إدارة الصور باستخدام IndexedDB ------------------ */
-        const DB_NAME = 'MemorySiteDB';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'images';
-        let db;
-
-        // فتح قاعدة بيانات IndexedDB
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                request.onupgradeneeded = function(e) {
-                    const database = e.target.result;
-                    if (!database.objectStoreNames.contains(STORE_NAME)) {
-                        database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-                    }
-                };
-                request.onsuccess = function(e) {
-                    db = e.target.result;
-                    resolve(db);
-                };
-                request.onerror = function(e) {
-                    reject(e);
-                };
-            });
-        }
-
-        function getAllImages() {
-            return new Promise((resolve) => {
-                const tx = db.transaction(STORE_NAME, 'readonly');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.getAll();
-                req.onsuccess = () => resolve(req.result);
-                req.onerror = () => resolve([]);
-            });
-        }
-
-        function saveImageToDB(dataUrl) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction(STORE_NAME, 'readwrite');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.add({ src: dataUrl, date: Date.now() });
-                req.onsuccess = () => resolve();
-                req.onerror = (e) => reject(e);
-            });
-        }
-
-        function deleteImageFromDB(id) {
-            return new Promise((resolve) => {
-                const tx = db.transaction(STORE_NAME, 'readwrite');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.delete(id);
-                req.onsuccess = () => resolve();
-            });
-        }
-
+        /* نظام ضغط وتشفير Base64 والمزامنة السحابية الحية */
         const imageInput = document.getElementById('image-input');
         const fileNameDisplay = document.getElementById('file-name');
         const uploadBtn = document.getElementById('upload-btn');
         const gallery = document.getElementById('gallery');
-        let tempProcessedImage = null;
+        let compressedBase64 = null;
 
-        // عرض الصور
-        async function renderGallery() {
-            const images = await getAllImages();
-            gallery.innerHTML = '';
-
-            if (images.length === 0) {
-                gallery.innerHTML = '<div class="empty-gallery">لا توجد صور محفوظة حتى الآن ✨</div>';
-                return;
-            }
-
-            images.forEach((item) => {
-                const div = document.createElement('div');
-                div.className = 'gallery-item';
-                div.innerHTML = `
-                    <img src="${item.src}" alt="صورة خاصة">
-                    <button class="delete-btn" onclick="removeImage(${item.id})" title="حذف الصورة">✕</button>
-                `;
-                gallery.appendChild(div);
-            });
-        }
-
-        // قراءة وضغط الصورة برمجياً لضمان عدم بطء المتصفح
         imageInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) {
                 uploadBtn.disabled = true;
                 fileNameDisplay.innerText = 'لم يتم اختيار صورة بعد';
-                tempProcessedImage = null;
+                compressedBase64 = null;
                 return;
             }
 
-            fileNameDisplay.innerText = 'جاري تحضير الصورة: ' + file.name;
+            fileNameDisplay.innerText = 'جاري ضغط وتجهيز الصورة: ' + file.name;
 
             const reader = new FileReader();
             reader.onload = function(event) {
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 1200;
-                    const MAX_HEIGHT = 1200;
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
                     let width = img.width;
                     let height = img.height;
 
@@ -752,7 +695,8 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    tempProcessedImage = canvas.toDataURL('image/jpeg', 0.88);
+                    // ضغط ذكي جداً بحيث يقل الحجم إلى بضع عشرات الكيلوبايتات لسرعة البرق
+                    compressedBase64 = canvas.toDataURL('image/jpeg', 0.72);
                     uploadBtn.disabled = false;
                     fileNameDisplay.innerText = 'جاهزة للرفع: ' + file.name;
                 };
@@ -761,31 +705,56 @@
             reader.readAsDataURL(file);
         });
 
-        // زر الرفع
-        uploadBtn.addEventListener('click', async function() {
-            if (!tempProcessedImage) return;
+        // زر الرفع المباشر إلى Realtime Database
+        uploadBtn.addEventListener('click', function() {
+            if (!compressedBase64) return;
 
             uploadBtn.disabled = true;
-            uploadBtn.innerText = 'جاري الحفظ...';
+            uploadBtn.innerText = 'جاري الحفظ في السحابة...';
 
-            await saveImageToDB(tempProcessedImage);
-            await renderGallery();
-
-            imageInput.value = '';
-            tempProcessedImage = null;
-            fileNameDisplay.innerText = 'تم رفع الصورة وعرضها بنجاح! ✨';
-            uploadBtn.innerText = 'رفع الصورة ⬆️';
+            imagesRef.push({
+                data: compressedBase64,
+                timestamp: Date.now()
+            }).then(() => {
+                uploadBtn.innerText = 'رفع الصورة ⬆️';
+                uploadBtn.disabled = true;
+                fileNameDisplay.innerText = 'تم رفع الصورة ومزامنتها للجميع! ✨';
+                imageInput.value = '';
+                compressedBase64 = null;
+            }).catch(error => {
+                console.error(error);
+                alert('حدث خطأ في الاتصال، تأكد من صلاحيات Rules في الـ Realtime Database.');
+                uploadBtn.disabled = false;
+                uploadBtn.innerText = 'رفع الصورة ⬆️';
+            });
         });
 
-        window.removeImage = async function(id) {
-            await deleteImageFromDB(id);
-            await renderGallery();
+        // الاستماع الفوري والتلقائي للصور (تحديث لحظي عند كل الأجهزة فوراً)
+        imagesRef.on('value', snapshot => {
+            const data = snapshot.val();
+            gallery.innerHTML = '';
+
+            if (!data) {
+                gallery.innerHTML = '<div class="empty-gallery">لا توجد صور بعد، ارفعوا أول ذكرى تجمعكم ✨</div>';
+                return;
+            }
+
+            Object.entries(data).forEach(([key, val]) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `
+                    <img src="${val.data}" alt="ذكرى مشفرة">
+                    <button class="delete-btn" onclick="deleteMemory('${key}')" title="حذف الصورة للجميع">✕</button>
+                `;
+                gallery.appendChild(div);
+            });
+        });
+
+        // دالة الحذف المشترك
+        window.deleteMemory = function(key) {
+            if (!confirm('هل تريدين حذف هذه الصورة من الموقع للجميع؟')) return;
+            imagesRef.child(key).remove();
         };
-
-        // تهيئة وتشغيل المعرض فور تحميل الصفحة
-        initDB().then(() => {
-            renderGallery();
-        });
     </script>
 </body>
 </html>
